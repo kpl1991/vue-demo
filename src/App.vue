@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Background from '@/components/Background'
+import Background from '@/components/BaseBackground'
 export default {
   name: 'App',
   components: {
