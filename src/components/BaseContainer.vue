@@ -7,7 +7,12 @@
           <el-radio-button :label="false">展开</el-radio-button>
           <el-radio-button :label="true">收起</el-radio-button>
         </el-radio-group>
-        <el-menu :router="true" default-active="menus[0].menu_url" class="" @select="handleSelect" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+        <el-menu :router="true" :default-active="activeMenu" class="" :unique-opened=true
+          @select="handleSelect"
+          @open="handleOpen"
+          @close="handleClose"
+          :collapse="isCollapse"
+         >
             <el-submenu
               v-for="menu in menus"
               :key="menu.menu_id"
@@ -64,7 +69,6 @@
       </el-aside>
       <el-main>
         <router-view/>
-        <p>{{msg}}</p>
       </el-main>
     </el-container>
   </el-container>
@@ -75,7 +79,7 @@ export default {
   name: 'Container',
   data () {
     return {
-      msg: '',
+      activeMenu: '',
       isCollapse: false,
       menus: [
         {
@@ -94,7 +98,7 @@ export default {
               menu_id: 'M0102',
               menu_nm: '页面二',
               icon: 'fa-bar-chart',
-              menu_url: '/nav1/page2'
+              menu_url: '/home/nav1/page2'
             }
           ]
         },
@@ -108,13 +112,13 @@ export default {
               menu_id: 'M0201',
               menu_nm: '页面三',
               icon: 'fa-folder-open',
-              menu_url: '/nav2/page1'
+              menu_url: '/home/nav2/page1'
             },
             {
               menu_id: 'M0202',
               menu_nm: '页面四',
               icon: 'fa-folder-open',
-              menu_url: '/nav2/page2'
+              menu_url: '/home/nav2/page2'
             }
           ]
         },
@@ -140,9 +144,12 @@ export default {
     }
   },
   created () {
-    this.$http.get('http://192.168.1.112:8088/system/findMenus').then(response => {
-      this.msg = response.data
-    }, err => {
+    this.activeMenu = this.menus[0].submenu[0].menu_url
+    this.$router.push({
+      path: this.activeMenu
+    })
+    this.$http.get(this.GLOBAL.baseURL + '/system/findMenus').then(response => {
+    }).catch(err => {
       console.log(err)
     })
   }
